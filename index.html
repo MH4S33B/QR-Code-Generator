@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced QR Code Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons (version 6.6.0) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- QRCode.js from CDN with defer -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="light-theme">
+    <div class="container">
+        <header class="app-header">
+            <h1>QR Code Generator</h1>
+            <p>Generate stunning QR codes with ease</p>
+            <div class="social-links">
+                <a href="mailto:mhaseebraja2006@gmail.com" class="social-link" aria-label="Email" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/mhaseeb211" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://github.com/MH4S33B" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://medium.com/@mh4s33b" class="social-link" aria-label="Medium" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-medium-m"></i>
+                </a>
+            </div>
+            <button id="theme-toggle" aria-label="Toggle between light and dark theme">
+                <i class="fas fa-sun"></i>
+            </button>
+        </header>
+        
+        <main class="app-body">
+            <section class="preview-panel" aria-label="QR Code Preview">
+                <div class="qr-container">
+                    <div id="qr-code"></div>
+                    <div id="qr-status" aria-live="polite" class="sr-only"></div>
+                    <div id="qr-loading" class="qr-loading">Generating...</div>
+                </div>
+                <div class="qr-stats">
+                    <div class="stat">
+                        <span class="stat-label">Version:</span>
+                        <span id="qr-version" class="stat-value">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Modules:</span>
+                        <span id="qr-modules" class="stat-value">-</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Error Correction:</span>
+                        <span id="qr-ecc-level" class="stat-value">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="control-panel" aria-label="QR Code Settings">
+                <div class="main-controls">
+                    <form id="qr-form">
+                        <div class="input-group">
+                            <label for="qr-type">QR Code Type:</label>
+                            <select id="qr-type" aria-label="Select QR Code Type">
+                                <option value="text" selected>Plain Text</option>
+                                <option value="url">URL</option>
+                                <option value="vcard">vCard</option>
+                                <option value="wifi">Wi-Fi</option>
+                                <option value="sms">SMS</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="qr-content">Content to encode:</label>
+                            <textarea id="qr-content" placeholder="Enter URL, text, or other content" aria-describedby="char-counter qr-content-tooltip"></textarea>
+                            <div class="char-counter" id="char-counter" aria-live="polite">Characters: 0 / Max: 2953</div>
+                            <div id="qr-content-tooltip" class="tooltip">Enter the content to encode into the QR code, such as a URL, text, or contact details.</div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h2>Basic Customization</h2>
+                            
+                            <div class="setting">
+                                <label for="qr-color">Color:</label>
+                                <input type="color" id="qr-color" value="#000000" aria-label="QR Code Color" aria-describedby="qr-color-tooltip">
+                                <div id="qr-color-tooltip" class="tooltip">Choose the color of the QR code modules.</div>
+                            </div>
+                            
+                            <div class="setting">
+                                <label for="qr-bgcolor">Background:</label>
+                                <input type="color" id="qr-bgcolor" value="#ffffff" aria-label="QR Code Background Color" aria-describedby="qr-bgcolor-tooltip">
+                                <div id="qr-bgcolor-tooltip" class="tooltip">Choose the background color of the QR code.</div>
+                            </div>
+
+                            <div class="setting">
+                                <label for="qr-logo">Overlay Logo (optional):</label>
+                                <input type="file" id="qr-logo" accept="image/*" aria-label="Upload Logo to Overlay on QR Code" aria-describedby="qr-logo-tooltip">
+                                <div id="qr-logo-tooltip" class="tooltip">Upload an image to overlay on the center of the QR code.</div>
+                            </div>
+
+                            <div class="setting">
+                                <label for="live-preview">
+                                    <input type="checkbox" id="live-preview"> Live Preview
+                                </label>
+                                <div id="live-preview-tooltip" class="tooltip">Update the QR code in real-time as settings change.</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="sidebar">
+                    <div class="settings-group">
+                        <h2>Advanced Settings</h2>
+                        
+                        <div class="setting">
+                            <label for="qr-size">Size:</label>
+                            <input type="range" id="qr-size" min="100" max="500" value="200" aria-label="QR Code Size" aria-describedby="qr-size-tooltip">
+                            <span id="size-value">200px</span>
+                            <div id="qr-size-tooltip" class="tooltip">Adjust the size of the QR code (100px to 500px).</div>
+                        </div>
+                        
+                        <div class="setting">
+                            <label for="qr-ecc">Error Correction:</label>
+                            <select id="qr-ecc" aria-label="Error Correction Level" aria-describedby="qr-ecc-tooltip">
+                                <option value="L">Low (7%)</option>
+                                <option value="M" selected>Medium (15%)</option>
+                                <option value="Q">Quartile (25%)</option>
+                                <option value="H">High (30%)</option>
+                            </select>
+                            <div id="qr-ecc-tooltip" class="tooltip">Higher levels allow the QR code to be read even if damaged, but reduce data capacity.</div>
+                        </div>
+                        
+                        <div class="setting">
+                            <label for="qr-margin">Margin:</label>
+                            <input type="range" id="qr-margin" min="0" max="20" value="4" aria-label="QR Code Margin" aria-describedby="qr-margin-tooltip">
+                            <span id="margin-value">4</span>
+                            <div id="qr-margin-tooltip" class="tooltip">Set the margin (quiet zone) around the QR code (0 to 20).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" id="generate-btn" class="btn-primary">
+                        <i class="fas fa-qrcode"></i> Generate QR Code
+                    </button>
+                    <button type="button" id="download-btn" class="btn-secondary">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button type="button" id="copy-btn" class="btn-secondary">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                    <button type="button" id="save-settings" class="btn-tertiary">
+                        <i class="fas fa-save"></i> Save Settings
+                    </button>
+                    <button type="button" id="clear-btn" class="btn-tertiary">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="app-footer">
+            <p>Advanced QR Code Generator | Uses QRCode.js library | Made by <a href="https://github.com/MH4S33B" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile of MH4S33B">MH4S33B</a></p>
+        </footer>
+    </div>
+    
+    <script defer src="script.js"></script>
+</body>
+</html>
