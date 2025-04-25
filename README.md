@@ -4,6 +4,10 @@
 
 A sleek, fully-featured **QR Code Generator** built with **HTML, CSS & JavaScript** – designed with style, power, and Gen Z vibes. Supports **live previews, customization, dark mode,** and even **logo overlays**. Perfect for sharing links, Wi-Fi creds, vCards, and more.
 
+## 🚀 Live Demo
+
+<a href="https://mh4s33b.github.io/QR-Code-Generator/">QR Code Generator</a>
+
 ## 🚀 Features
 
 - ✨ Multiple QR Types: Plain Text, URL, Wi-Fi, SMS, vCard
